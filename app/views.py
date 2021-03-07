@@ -8,10 +8,15 @@ This file creates your application.
 from app import app
 from flask import render_template, request, redirect, url_for, flash
 
+# Additional Imports
+from app import mail
+from flask_mail import Message
+from .forms import ContactForm
 
 ###
 # Routing for your application.
 ###
+
 
 @app.route('/')
 def home():
@@ -24,10 +29,32 @@ def about():
     """Render the website's about page."""
     return render_template('about.html', name="Mary Jane")
 
+
 @app.route('/contact/')
 def contact():
     """Render the website's contact page."""
-    return render_template('contact.html')
+
+    # check that if a POST request is made and that you validate the user input on submit.
+    the_form = Contactthe_form()
+    if request.method == "POST":
+        if the_form.validate_on_submit():
+            name = the_form.name.data
+            email = the_form.email.data
+            subject = the_form.subject.data
+            text_area = the_form.text_area.data
+
+            msg = Message(subject, sender=(name, email),
+                          recipients=["jones.shemar.sj@gmail.com"])
+            msg.body = text_area
+            mail.send(msg)
+
+            flash("Form sucessfully completed!", "success")
+            return redirect(url_for('home'))
+
+        flash("Please fill out all fields appropriately.")
+        flash_errors(the_form)
+
+    return render_template('contact.html', form=the_form)
 
 
 ###
