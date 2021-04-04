@@ -1,4 +1,5 @@
 from flask import Flask
+
 # Additional Imports
 from flask_mail import Mail
 from .config import Config

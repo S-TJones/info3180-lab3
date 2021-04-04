@@ -27,15 +27,15 @@ def home():
 @app.route('/about/')
 def about():
     """Render the website's about page."""
-    return render_template('about.html', name="Mary Jane")
+    return render_template('about.html', name="S~Jones")
 
 
-@app.route('/contact/')
+@app.route('/contact/', methods=['GET', 'POST'])
 def contact():
     """Render the website's contact page."""
 
     # check that if a POST request is made and that you validate the user input on submit.
-    the_form = Contactthe_form()
+    the_form = ContactForm()
     if request.method == "POST":
         if the_form.validate_on_submit():
             name = the_form.name.data
@@ -50,9 +50,9 @@ def contact():
 
             flash("Form sucessfully completed!", "success")
             return redirect(url_for('home'))
-
-        flash("Please fill out all fields appropriately.")
-        flash_errors(the_form)
+        else:
+            flash("Please fill out all fields appropriately.")
+            flash_errors(the_form)
 
     return render_template('contact.html', form=the_form)
 
